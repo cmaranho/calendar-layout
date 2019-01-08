@@ -63,8 +63,8 @@ export default class AgendaScreen extends Component {
       description: '',
       title: '',
       buttonIndex: 0,
-      getDateTime: '',
-      timeHour: '',
+      showDateTime: '',
+      getTime: '',
       modalVisible: false,
       isDateTimePickerVisible: false,
       items: {
@@ -156,8 +156,8 @@ export default class AgendaScreen extends Component {
     Reactotron.log('A date has been picked: ', date);
     this._hideDateTimePicker();
     this.setState({
-      getDateTime: date.getHours() + ':' + date.getMinutes(),
-      timeHour: date,
+      getTime: date,
+      showDateTime:  date.getHours() + ':' + date.getMinutes()
     })
   };
 
@@ -176,7 +176,7 @@ export default class AgendaScreen extends Component {
     let date = new Date();
     let getDateHour = date.getHours() + ':' + date.getMinutes();
     this.setState({
-      getDateTime: getDateHour
+      showDateTime: getDateHour
     })
   }
 
@@ -235,6 +235,8 @@ export default class AgendaScreen extends Component {
           }))
     } else return null
   }
+
+ 
 
   loadItems(day) {
     setTimeout(() => {
@@ -306,7 +308,7 @@ export default class AgendaScreen extends Component {
     this.setState({
       selected: day.dateString
     });
-    Reactotron.log(this.state.timeHour.getHours(), this.state.timeHour)
+    Reactotron.log(this.state.getTime.getHours(), this.state.getTime)
   }
 
   getButton = (index, color) => {
@@ -360,7 +362,7 @@ export default class AgendaScreen extends Component {
             width: Dimensions.get('window').width, flexDirection: 'row'
           }}>
             <TouchableOpacity onPress={this._showDateTimePicker}>
-              <Text style={{ fontSize: 18 }}>{this.state.getDateTime}</Text>
+              <Text style={{ fontSize: 18 }}>{this.state.showDateTime}</Text>
             </TouchableOpacity>
             <DateTimePicker
               mode={'time'}
