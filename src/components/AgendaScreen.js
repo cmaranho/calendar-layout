@@ -17,9 +17,6 @@ const is24Hour = DeviceInfo.is24Hour();
 import { Agenda, CalendarList } from 'react-native-calendars';
 import { LocaleConfig } from 'react-native-calendars';
 
-//moment module for manipulate dates
-const moment = require('moment-timezone');
-
 //Dev module
 import Reactotron from 'reactotron-react-native'
 
@@ -33,6 +30,9 @@ import TextCard from './TextCard'
 import ModalComponent from './ModalComponent'
 import Button from './Button'
 import Input from './Input'
+
+//functions 
+import { filterItemByHour, showTag, timeToString } from '../functions'
 
 LocaleConfig.locales['pt-BR'] = {
   monthNames: [
@@ -137,16 +137,9 @@ export default class AgendaScreen extends Component {
     };
   }
 
-
   componentWillMount() {
     this.getDayTime()
   }
-
-  getTimeFormat = (time) => {
-    let timeName = moment.tz.guess()
-    return moment(time).tz(timeName).format('HH:mm')
-  }
-
 
   _showDateTimePicker = () => this.setState({ isDateTimePickerVisible: true });
 
@@ -161,18 +154,7 @@ export default class AgendaScreen extends Component {
     })
   };
 
-  time24to12(time24) {
-    var ts = time24;
-    var H = +ts.substr(0, 2);
-    var h = (H % 12) || 12;
-    h = (h < 10) ? ("0" + h) : h;  // leading 0 at the left for 1 digit hours
-    var ampm = H < 12 ? " AM" : " PM";
-    ts = h + ts.substr(2, 3) + ampm;
-    return ts;
-  };
-
-
-  getDayTime = () => {
+   getDayTime = () => {
     let date = new Date();
     let getDateHour = date.getHours() + ':' + date.getMinutes();
     this.setState({
@@ -180,81 +162,22 @@ export default class AgendaScreen extends Component {
     })
   }
 
-  createTag = () => {
-    const { items } = this.state
-
-    if (Object.values(items).length === 0) { return null }
-    else {
-      return Object.assign(
-        ...Object.entries(items)
-          .map(([objKey, dots]) => (
-            { [objKey]: dots = { dots: dots.map(dots => dots.dots) } }
-          )));
-    }
-
-  }
-
-  filterItens = () => {
-    const { items } = this.state
-    return Object.assign(...Object.entries(items).map(([key, value]) => (
-      {
-        [key]: value = value.map(value => {
-          const { name, dateTime, tasks, dateString, dots } = value
-          if (is24Hour === false) {
-            return { name, dateTime: this.time24to12(this.getTimeFormat(dateTime)), tasks, dateString, dots }
-          } else
-            return { name, dateTime: this.getTimeFormat(dateTime), tasks, dateString, dots }
-        })
-
-      })))
-  }
-
-  filterItemByHour = () => {
-    let items = this.filterItens()
-    return Object.assign(...Object.entries(items)
-      .map(([key, value]) => ({
-        [key]: value.sort((a, b) => {
-          return (a.dateTime < b.dateTime) ? -1 : (a.dateTime > b.dateTime) ? 1 : 0;
-        })
-      })));
-  }
-
-  showTag = () => {
-    let marked = this.createTag();
-    if (marked !== null) {
-      return Object.assign(
-        ...Object.entries(marked).map(
-          ([key, value]) => {
-            if (value.dots.length > 3) {
-              for (let i = 2; i < value.dots.length; i++) {
-                value.dots.splice(i, 1)
-              }
-              return { [key]: { dots: value.dots } }
-
-            } else { return { [key]: { dots: value.dots } } }
-          }))
-    } else return null
-  }
-
- 
-
+  
   loadItems(day) {
     setTimeout(() => {
       for (let i = -15; i < 85; i++) {
         const time = day.timestamp + i * 24 * 60 * 60 * 1000;
-        const strTime = this.timeToString(time);
+        const strTime = timeToString(time);
         if (!this.state.items[strTime]) {
           this.state.items[strTime] = [];
         }
       }
-      //console.log(this.state.items);
       const newItems = {};
       Object.keys(this.state.items).map(key => { newItems[key] = this.state.items[key]; });
       this.setState({
         items: newItems
       });
     }, 1000);
-    // console.log(`Load Items for ${day.year}-${day.month}`);
   }
 
   renderItem(item) {
@@ -293,11 +216,6 @@ export default class AgendaScreen extends Component {
     return r1.name !== r2.name;
   }
 
-  timeToString(time) {
-    const date = new Date(time);
-    return date.toISOString().split('T')[0];
-  }
-
   setModalVisible = (visible) => {
     this.setState({
       modalVisible: visible
@@ -311,8 +229,7 @@ export default class AgendaScreen extends Component {
     Reactotron.log(this.state.getTime.getHours(), this.state.getTime)
   }
 
-  getButton = (index, color) => {
-    const { buttonIndex } = this.state
+  getButton = (index) => {
     this.setState({
       buttonIndex: index,
     })
@@ -420,14 +337,14 @@ export default class AgendaScreen extends Component {
         </Header>
 
         <Agenda
-          items={this.filterItemByHour()}
+          items={filterItemByHour(this.state.items)}
           selected={new Date()}
           loadItemsForMonth={(day) => this.loadItems(day)}
           renderItem={this.renderItem.bind(this)}
           renderEmptyDate={this.renderEmptyDate.bind(this)}
           rowHasChanged={this.rowHasChanged.bind(this)}
           onDayPress={(day) => { Reactotron.log('selected day', day) }}
-          markedDates={this.showTag()}
+          markedDates={showTag(this.state.items)}
           markingType={'multi-dot'}
           theme={{ ...theme }}
         // renderDay={(day, item) => (<Text>{day ? day.day: 'item'}</Text>)}
