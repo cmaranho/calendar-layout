@@ -67,44 +67,38 @@ export default class AgendaScreen extends Component {
       timeHour: '',
       modalVisible: false,
       isDateTimePickerVisible: false,
-      getDayNow: '2018-12-01',
       items: {
         '2019-01-01': [
           {
             name: 'Dar carona',
-            hour: '2019-01-06T08:47:00.000Z',
+            dateTime: '2019-01-06T08:47:00.000Z',
             tasks: 'Passar no Roberto leva-lo ao centro de santo andré',
-            dateString: '2019-01-04',
             dots: { key: 'massage', color: '#38c328' }
 
           },
           {
             name: 'Ir ao centro de São Paulo ',
-            hour: '2019-01-06T11:47:00.000Z',
+            dateTime: '2019-01-06T11:47:00.000Z',
             tasks: 'Ir sem falta, preciso ver um presente',
-            dateString: '2019-01-04',
             dots: { key: 'defautMark', color: '#30c0f8' }
 
           },
           {
             name: 'Levar o cachorro no banho e tosa',
-            hour: '2019-01-06T14:47:00.000Z',
+            dateTime: '2019-01-06T14:47:00.000Z',
             tasks: 'Levar o cachorro pra tosar',
-            dateString: '2019-01-04',
             dots: { key: 'workout', color: '#ff4745' }
           },
           {
             name: 'Ir ao médico ',
-            hour: '2019-01-06T16:47:00.000Z',
+            dateTime: '2019-01-06T16:47:00.000Z',
             tasks: 'Consulta com o dr. Anderson',
-            dateString: '2019-01-04',
             dots: { key: 'workout', color: '#ff4745' }
           },
           {
             name: 'Viajar',
-            hour: '2019-01-07T00:47:00.000Z',
+            dateTime: '2019-01-07T00:47:00.000Z',
             tasks: 'Pegar a estrada para Santos',
-            dateString: '2019-01-04',
             dots: { key: 'vacation', color: '#fbab15' }
           },
         ],
@@ -112,8 +106,7 @@ export default class AgendaScreen extends Component {
           {
             name: 'SEGUNDO EXEMPLO ',
             tasks: 'TESTE TASKS',
-            hour: '2019-01-06T16:47:00.000Z',
-            dateString: '2019-01-08',
+            dateTime: '2019-01-06T16:47:00.000Z',
             dots: { key: 'defautMark', color: '#30c0f8' }
           }
         ],
@@ -121,15 +114,13 @@ export default class AgendaScreen extends Component {
           {
             name: 'TERCEIRO EXEMPLO ',
             tasks: 'TESTE TASKS',
-            hour: '2019-01-06T16:47:00.000Z',
-            dateString: '2019-01-22',
+            dateTime: '2019-01-06T16:47:00.000Z',
             dots: { key: 'defautMark', color: '#30c0f8' }
           },
           {
             name: 'Viajar',
-            hour: '2019-01-06T16:47:00.000Z',
+            dateTime: '2019-01-06T16:47:00.000Z',
             tasks: 'Pegar a estrada para Santos',
-            dateString: '2019-01-04',
             dots: { key: 'vacation', color: '#fbab15' }
           },
         ],
@@ -137,7 +128,7 @@ export default class AgendaScreen extends Component {
           {
             name: 'QUARTO EXEMPLO ',
             tasks: 'TESTE TASKS',
-            hour: '2019-01-06T16:47:00.000Z',
+            dateTime: '2019-01-06T16:47:00.000Z',
             dateString: '2019-01-24',
             dots: { key: 'defautMark', color: '#30c0f8' }
           }
@@ -149,7 +140,6 @@ export default class AgendaScreen extends Component {
 
   componentWillMount() {
     this.getDayTime()
-    Reactotron.log(this.filterItens())
   }
 
   getTimeFormat = (time) => {
@@ -190,7 +180,7 @@ export default class AgendaScreen extends Component {
     })
   }
 
-   createTag = () => {
+  createTag = () => {
     const { items } = this.state
 
     if (Object.values(items).length === 0) { return null }
@@ -209,11 +199,11 @@ export default class AgendaScreen extends Component {
     return Object.assign(...Object.entries(items).map(([key, value]) => (
       {
         [key]: value = value.map(value => {
-          const { name, hour, tasks, dateString, dots } = value
+          const { name, dateTime, tasks, dateString, dots } = value
           if (is24Hour === false) {
-            return { name, hour: this.time24to12(this.getTimeFormat(hour)), tasks, dateString, dots }
+            return { name, dateTime: this.time24to12(this.getTimeFormat(dateTime)), tasks, dateString, dots }
           } else
-            return { name, hour: this.getTimeFormat(hour), tasks, dateString, dots }
+            return { name, dateTime: this.getTimeFormat(dateTime), tasks, dateString, dots }
         })
 
       })))
@@ -224,7 +214,7 @@ export default class AgendaScreen extends Component {
     return Object.assign(...Object.entries(items)
       .map(([key, value]) => ({
         [key]: value.sort((a, b) => {
-          return (a.hour < b.hour) ? -1 : (a.hour > b.hour) ? 1 : 0;
+          return (a.dateTime < b.dateTime) ? -1 : (a.dateTime > b.dateTime) ? 1 : 0;
         })
       })));
   }
@@ -274,7 +264,7 @@ export default class AgendaScreen extends Component {
             TouchableNativeFeedback.SelectableBackground()
         }>
         <CardAgenda>
-          <TextCard>{item.hour}</TextCard>
+          <TextCard>{item.dateTime}</TextCard>
           <View style={{ flexDirection: 'row', marginTop: 5 }}>
             <TagComponent color={item.dots.color} />
             <View style={{
