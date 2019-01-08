@@ -20,7 +20,6 @@ import { LocaleConfig } from 'react-native-calendars';
 //Dev module
 import Reactotron from 'reactotron-react-native'
 
-
 //components
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import Header from './Header'
@@ -150,11 +149,11 @@ export default class AgendaScreen extends Component {
     this._hideDateTimePicker();
     this.setState({
       getTime: date,
-      showDateTime:  date.getHours() + ':' + date.getMinutes()
+      showDateTime: date.getHours() + ':' + date.getMinutes()
     })
   };
 
-   getDayTime = () => {
+  getDayTime = () => {
     let date = new Date();
     let getDateHour = date.getHours() + ':' + date.getMinutes();
     this.setState({
@@ -162,7 +161,7 @@ export default class AgendaScreen extends Component {
     })
   }
 
-  
+
   loadItems(day) {
     setTimeout(() => {
       for (let i = -15; i < 85; i++) {
@@ -271,13 +270,7 @@ export default class AgendaScreen extends Component {
               }}
             />}
         >
-          <View style={{
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            paddingRight: 20,
-            height: 40,
-            width: Dimensions.get('window').width, flexDirection: 'row'
-          }}>
+          <View style={styles.viewHours}>
             <TouchableOpacity onPress={this._showDateTimePicker}>
               <Text style={{ fontSize: 18 }}>{this.state.showDateTime}</Text>
             </TouchableOpacity>
@@ -291,12 +284,7 @@ export default class AgendaScreen extends Component {
 
           </View>
 
-          <View style={{
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            paddingRight: 10,
-            width: Dimensions.get('window').width, flexDirection: 'row'
-          }}>
+          <View style={styles.groupButtons}>
             <Text>Marcadores</Text>
             <View style={{ flexDirection: 'row' }}>
               {this.groupButtons()}
@@ -305,24 +293,14 @@ export default class AgendaScreen extends Component {
 
 
           <Input
-            style={{
-              height: 40,
-              marginTop: 10,
-              marginBottom: 5,
-              width: Dimensions.get('window').width - 20,
-              borderColor: '#ececec', borderWidth: 1
-            }}
+            style={styles.inputTitle}
             onChangeText={(title) => this.setState({ title })}
             value={this.state.title}
             placeholder={'Título'}
           />
           <Text>Descrição</Text>
           <Input
-            style={{
-              height: 120,
-              width: Dimensions.get('window').width - 20,
-              borderColor: '#ececec', borderWidth: 1,
-            }}
+            style={styles.inputdescBox}
             onChangeText={(description) => this.setState({ description })}
             value={this.state.description}
           />
@@ -347,7 +325,6 @@ export default class AgendaScreen extends Component {
           markedDates={showTag(this.state.items)}
           markingType={'multi-dot'}
           theme={{ ...theme }}
-        // renderDay={(day, item) => (<Text>{day ? day.day: 'item'}</Text>)}
         />
       </View>
     );
@@ -396,5 +373,30 @@ const styles = StyleSheet.create({
     height: 15,
     flex: 1,
     paddingTop: 30
+  },
+  groupButtons: {
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingRight: 10,
+    width: Dimensions.get('window').width, flexDirection: 'row'
+  },
+  inputTitle: {
+    height: 40,
+    marginTop: 10,
+    marginBottom: 5,
+    width: Dimensions.get('window').width - 20,
+    borderColor: '#ececec', borderWidth: 1
+  },
+  inputdescBox: {
+    height: 120,
+    width: Dimensions.get('window').width - 20,
+    borderColor: '#ececec', borderWidth: 1,
+  },
+  viewHours: {
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingRight: 20,
+    height: 40,
+    width: Dimensions.get('window').width, flexDirection: 'row'
   }
 });
