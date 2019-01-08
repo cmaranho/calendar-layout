@@ -3,7 +3,6 @@ import { AppRegistry, View, TextInput, StyleSheet } from 'react-native';
 
 class Input extends Component {
   render() {
-
     return (
       <TextInput
         {...this.props} // Inherit any props passed to it; e.g., multiline, numberOfLines below
@@ -16,6 +15,3 @@ class Input extends Component {
 
 export default Input
 
-const styles = StyleSheet.create({
-
-})

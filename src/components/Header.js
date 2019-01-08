@@ -1,28 +1,18 @@
-import React, {Component} from 'react';
-import {Platform, StyleSheet, Dimensions, View} from 'react-native';
+import React from 'react';
+import { StyleSheet, Dimensions, View } from 'react-native';
 
-//import components
+const Header = props => {
 
-export default class Calendar extends Component {
+  const { custom, children } = props
+  return (
+    <View style={[styles.container, { ...custom }]}>
+      {children}
+    </View>
+  );
 
-    constructor(props) {
-      super(props)
-    
-      this.state = { };
-    };
-    
-   
-  render() {
+};
 
-    const {custom, children} = this.props
-
-    return (
-      <View style={[styles.container, {...custom}]}>
-       {children}
-      </View>
-    );
-  }
-}
+export default Header;
 
 const styles = StyleSheet.create({
   container: {

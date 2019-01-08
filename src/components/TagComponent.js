@@ -3,7 +3,7 @@ import { Text, View, StyleSheet } from 'react-native';
 
 const TagComponent = (props) => {
 
-    const {selected} = props
+    const { selected } = props
 
     const styleDefault = [styles.tag]
 
@@ -13,10 +13,11 @@ const TagComponent = (props) => {
     }
 
     if (selected) styleDefault.push(styles.tagRadiusSelected)
-    
-    return(
-    <View style={[styleDefault, { backgroundColor: props.color, ...tagradius}]}></View>
-);}
+
+    return (
+        <View style={[styleDefault, { backgroundColor: props.color, ...tagradius }]}></View>
+    );
+}
 
 export default TagComponent;
 
@@ -26,11 +27,11 @@ TagComponent.defaultProps = {
 }
 
 const styles = StyleSheet.create({
-    
-    tag:{
+
+    tag: {
         marginTop: 10,
         marginRight: 10,
-        borderRadius: 44/2,
+        borderRadius: 44 / 2,
     },
     tagRadiusSelected: {
         position: 'absolute',

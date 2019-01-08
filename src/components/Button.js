@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 
 const Button = props => {
 
-    const { selected, press, size } = props;
+    const { press, size } = props;
     const styleBtn = [styles.button]
 
     let sizes = {
@@ -12,7 +12,7 @@ const Button = props => {
         height: size,
     }
 
-    if(size) styleBtn.push(sizes)
+    if (size) styleBtn.push(sizes)
 
     return (
 

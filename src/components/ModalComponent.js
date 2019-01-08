@@ -38,7 +38,7 @@ export default ModalComponent;
 
 const styles = StyleSheet.create({
   modalView: {
-    flex: 1,  
+    flex: 1,
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
     padding: 10,

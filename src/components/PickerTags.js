@@ -3,15 +3,14 @@ import { AppRegistry, Picker, View, TextInput, StyleSheet } from 'react-native';
 
 class PickerTags extends Component {
     render() {
-
         return (
-           <View>
+            <View>
                 <Picker
-                {...this.props}
-            >
-                 {this.props.children}
-            </Picker>
-           </View>
+                    {...this.props}
+                >
+                    {this.props.children}
+                </Picker>
+            </View>
         );
     }
 }
