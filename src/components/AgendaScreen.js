@@ -31,7 +31,13 @@ import Button from './Button'
 import Input from './Input'
 
 //functions 
-import { filterItemByHour, showTag, timeToString } from '../functions'
+import {
+  filterItemByHour,
+  time24to12,
+  showTag,
+  timeToString,
+  getTimeFormat
+} from '../functions'
 
 LocaleConfig.locales['pt-BR'] = {
   monthNames: [
@@ -147,15 +153,16 @@ export default class AgendaScreen extends Component {
   _handleDatePicked = (date) => {
     Reactotron.log('A date has been picked: ', date);
     this._hideDateTimePicker();
+    let time = getTimeFormat(date)
     this.setState({
-      getTime: date,
-      showDateTime: date.getHours() + ':' + date.getMinutes()
+      getTime: time,
+      showDateTime: time
     })
   };
 
   getDayTime = () => {
-    let date = new Date();
-    let getDateHour = date.getHours() + ':' + date.getMinutes();
+    let date = new Date().toISOString();
+    let getDateHour = getTimeFormat(date);
     this.setState({
       showDateTime: getDateHour
     })
@@ -272,7 +279,7 @@ export default class AgendaScreen extends Component {
         >
           <View style={styles.viewHours}>
             <TouchableOpacity onPress={this._showDateTimePicker}>
-              <Text style={{ fontSize: 18 }}>{this.state.showDateTime}</Text>
+              <Text style={{ fontSize: 18 }}>{!is24Hour ? time24to12(this.state.showDateTime) : this.state.showDateTime}</Text>
             </TouchableOpacity>
             <DateTimePicker
               mode={'time'}
