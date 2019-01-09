@@ -84,9 +84,7 @@ export default class AgendaScreen extends Component {
       ...initialState,
       getDate: new Date().toISOString().split('T')[0],
       modalVisible: false,
-      dataTest: {},
       isDateTimePickerVisible: false,
-      itemData: {},
       items: {
         '2019-01-01': [
           {
@@ -138,7 +136,7 @@ export default class AgendaScreen extends Component {
             tasks: 'Visitar a capítal do Rio grande do Sul',
             dateTime: '2019-01-06T08:47:00.000Z',
             timeTamp: 1546992000000,
-            dateString: '2019-01-01',
+            dateString: '2019-01-24',
             dots: { key: 'defautMark', color: '#30c0f8' }
           }
         ],
@@ -196,6 +194,7 @@ export default class AgendaScreen extends Component {
       name: title,
       tasks: description,
       dateTime: getTime,
+      dateString: getDate,
       timeTamp: getTimeTamp,
       ...buttonIndex === 0 ? { dots: defaultMark } : null,
       ...buttonIndex === 1 ? { dots: greenMark } : null,
@@ -211,7 +210,7 @@ export default class AgendaScreen extends Component {
 
     this.setState({
       items: copyItens
-    })
+    }, () => this.setModalVisible(!this.state.modalVisible))
 
   }
 
@@ -327,7 +326,7 @@ export default class AgendaScreen extends Component {
               onDayPress={(day) => { this.onDayPress(day) }}
               horizontal={true}
               pagingEnabled={true}
-              markedDates={{ [this.state.selected]: { selected: true, disableTouchEvent: true } }}
+              markedDates={{ [this.state.selected]: { selected: true } }}
               style={{ height: 320 }}
               theme={{
                 ...theme
