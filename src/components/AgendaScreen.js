@@ -252,7 +252,7 @@ export default class AgendaScreen extends Component {
     }))
   }
 
-  renderItem = (item) => {
+  renderItem(item) {
     let swipeoutBtns = [
       {
         text: 'Delete',
@@ -285,13 +285,13 @@ export default class AgendaScreen extends Component {
     );
   }
 
-  renderEmptyDate = () => {
+  renderEmptyDate() {
     return (
       <View style={styles.emptyDate}><Text>Nenhuma tarefa</Text></View>
     );
   }
 
-  rowHasChanged = (r1, r2) => {
+  rowHasChanged(r1, r2) {
     return r1.name !== r2.name;
   }
 
@@ -359,7 +359,8 @@ export default class AgendaScreen extends Component {
           <View style={styles.viewHours}>
             <TouchableOpacity onPress={this._showDateTimePicker}>
               <Text style={{ fontSize: 18 }}>{!is24Hour ?
-                time24to12(getTimeFormat(this.state.showDateTime)) : getTimeFormat(this.state.showDateTime)}</Text>
+                time24to12(getTimeFormat(this.state.showDateTime))
+                : getTimeFormat(this.state.showDateTime)}</Text>
             </TouchableOpacity>
             <DateTimePicker
               mode={'time'}
@@ -404,10 +405,10 @@ export default class AgendaScreen extends Component {
         <Agenda
           items={filterItemByHour(this.state.items)}
           selected={new Date()}
-          loadItemsForMonth={(day) => this.loadItems(day)}
-          renderItem={(item) => this.renderItem(item)}
-          renderEmptyDate={() => this.renderEmptyDate()}
-          rowHasChanged={(r1, r2) => this.rowHasChanged(r1, r2)}
+          loadItemsForMonth={this.loadItems.bind(this)}
+          renderItem={this.renderItem.bind(this)}
+          renderEmptyDate={this.renderEmptyDate.bind(this)}
+          rowHasChanged={this.rowHasChanged.bind(this)}
           markedDates={showTag(this.state.items)}
           markingType={'multi-dot'}
           theme={{ ...theme }}
