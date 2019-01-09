@@ -1,7 +1,5 @@
 //moment module for manipulate dates
 const moment = require('moment-timezone');
-
-
 import DeviceInfo from 'react-native-device-info';
 const is24Hour = DeviceInfo.is24Hour();
 
@@ -15,9 +13,15 @@ const time24to12 = (time24) => {
     return ts;
 };
 
+
 const getTimeFormat = (time) => {
     let timeName = moment.tz.guess()
     return moment(time).tz(timeName).format('HH:mm')
+}
+
+const getDayTime = () => {
+    let date = new Date().toISOString();
+    return getTimeFormat(date)
 }
 
 const createTag = (items) => {
@@ -47,18 +51,20 @@ const filterItens = (items) => {
 }
 
 const filterItemByHour = (items) => {
-    const itemsDate = filterItens(items)
-    return Object.assign(...Object.entries(itemsDate)
-        .map(([key, value]) => ({
-            [key]: value.sort((a, b) => {
-                return (a.dateTime < b.dateTime) ? -1 : (a.dateTime > b.dateTime) ? 1 : 0;
-            })
-        })));
+    if (Object.values(items).length === 0) { return null }
+    else {
+        const itemsDate = filterItens(items)
+        return Object.assign(...Object.entries(itemsDate)
+            .map(([key, value]) => ({
+                [key]: value.sort((a, b) => {
+                    return (a.dateTime < b.dateTime) ? -1 : (a.dateTime > b.dateTime) ? 1 : 0;
+                })
+            })));
+    }
 }
 
 const showTag = (items) => {
     const marked = createTag(items);
-
     if (marked !== null) {
         return Object.assign(
             ...Object.entries(marked).map(
@@ -81,5 +87,5 @@ const timeToString = (time) => {
 
 export {
     time24to12, getTimeFormat, createTag, filterItens,
-    filterItemByHour, showTag, timeToString
+    filterItemByHour, showTag, timeToString, getDayTime
 }

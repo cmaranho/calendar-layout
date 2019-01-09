@@ -3,8 +3,6 @@ import {
   Text,
   View,
   StyleSheet,
-  TouchableNativeFeedback,
-  Platform,
   TouchableOpacity,
   Dimensions
 } from 'react-native';
@@ -30,13 +28,15 @@ import ModalComponent from './ModalComponent'
 import Button from './Button'
 import Input from './Input'
 
+import Swipeout from 'react-native-swipeout';
+
 //functions 
 import {
   filterItemByHour,
   time24to12,
   showTag,
   timeToString,
-  getTimeFormat
+  getTimeFormat,
 } from '../functions'
 
 LocaleConfig.locales['pt-BR'] = {
@@ -60,81 +60,85 @@ LocaleConfig.locales['pt-BR'] = {
 
 LocaleConfig.defaultLocale = 'pt-BR';
 
+const initialState = {
+  description: '',
+  title: '',
+  buttonIndex: 0,
+  showDateTime: new Date().toISOString(),
+  getTime: '',
+  getTimeTamp: '',
+}
+
+
+const defaultMark = { key: 'defautMark', color: '#30c0f8' }
+const greenMark = { key: 'greenMark', color: '#38c328' };
+const redMark = { key: 'redMark', color: '#ff4745' }
+const yellowMark = { key: 'yellowMark', color: '#fbab15' }
+
+
 
 export default class AgendaScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      description: '',
-      title: '',
-      buttonIndex: 0,
-      showDateTime: '',
-      getTime: '',
+      ...initialState,
+      getDate: new Date().toISOString().split('T')[0],
       modalVisible: false,
+      dataTest: {},
       isDateTimePickerVisible: false,
+      itemData: {},
       items: {
         '2019-01-01': [
           {
-            name: 'Dar carona',
+            name: 'Ir ao médico',
+            tasks: 'Consulta marcada com o dr. Leandro',
             dateTime: '2019-01-06T08:47:00.000Z',
-            tasks: 'Passar no Roberto leva-lo ao centro de santo andré',
-            dots: { key: 'massage', color: '#38c328' }
-
-          },
-          {
-            name: 'Ir ao centro de São Paulo ',
-            dateTime: '2019-01-06T11:47:00.000Z',
-            tasks: 'Ir sem falta, preciso ver um presente',
+            timeTamp: 1546992000000,
+            dateString: '2019-01-01',
             dots: { key: 'defautMark', color: '#30c0f8' }
 
-          },
-          {
-            name: 'Levar o cachorro no banho e tosa',
-            dateTime: '2019-01-06T14:47:00.000Z',
-            tasks: 'Levar o cachorro pra tosar',
-            dots: { key: 'workout', color: '#ff4745' }
-          },
-          {
-            name: 'Ir ao médico ',
-            dateTime: '2019-01-06T16:47:00.000Z',
-            tasks: 'Consulta com o dr. Anderson',
-            dots: { key: 'workout', color: '#ff4745' }
-          },
-          {
-            name: 'Viajar',
-            dateTime: '2019-01-07T00:47:00.000Z',
-            tasks: 'Pegar a estrada para Santos',
-            dots: { key: 'vacation', color: '#fbab15' }
-          },
+          }
         ],
         '2019-01-08': [
           {
-            name: 'SEGUNDO EXEMPLO ',
-            tasks: 'TESTE TASKS',
-            dateTime: '2019-01-06T16:47:00.000Z',
+            name: 'Dar carona',
+            tasks: 'Passar no Roberto leva-lo ao centro de santo andré',
+            dateTime: '2019-01-06T08:47:00.000Z',
+            timeTamp: 1546992000000,
+            dateString: '2019-01-08',
+            dots: { key: 'defautMark', color: '#30c0f8' }
+
+          },
+
+        ],
+        '2019-01-08': [
+          {
+            name: 'Viajar para a Praia',
+            tasks: 'Viajar até Santos',
+            dateTime: '2019-01-06T08:47:00.000Z',
+            timeTamp: 1546992000000,
+            dateString: '2019-01-08',
             dots: { key: 'defautMark', color: '#30c0f8' }
           }
         ],
         '2019-01-22': [
           {
-            name: 'TERCEIRO EXEMPLO ',
-            tasks: 'TESTE TASKS',
-            dateTime: '2019-01-06T16:47:00.000Z',
+            name: 'Ir para Santa Catarina',
+            tasks: 'Viajar para Santa catarina',
+            dateTime: '2019-01-06T08:47:00.000Z',
+            timeTamp: 1546992000000,
+            dateString: '2019-01-22',
             dots: { key: 'defautMark', color: '#30c0f8' }
           },
-          {
-            name: 'Viajar',
-            dateTime: '2019-01-06T16:47:00.000Z',
-            tasks: 'Pegar a estrada para Santos',
-            dots: { key: 'vacation', color: '#fbab15' }
-          },
+
         ],
         '2019-01-24': [
           {
-            name: 'QUARTO EXEMPLO ',
-            tasks: 'TESTE TASKS',
-            dateTime: '2019-01-06T16:47:00.000Z',
-            dateString: '2019-01-24',
+            name: 'Ir para Rio grande do Sul',
+            tasks: 'Visitar a capítal do Rio grande do Sul',
+            dateTime: '2019-01-06T08:47:00.000Z',
+            timeTamp: 1546992000000,
+            dateString: '2019-01-01',
             dots: { key: 'defautMark', color: '#30c0f8' }
           }
         ],
@@ -143,7 +147,7 @@ export default class AgendaScreen extends Component {
   }
 
   componentWillMount() {
-    this.getDayTime()
+    Reactotron.log(this.state.getDate)
   }
 
   _showDateTimePicker = () => this.setState({ isDateTimePickerVisible: true });
@@ -153,21 +157,11 @@ export default class AgendaScreen extends Component {
   _handleDatePicked = (date) => {
     Reactotron.log('A date has been picked: ', date);
     this._hideDateTimePicker();
-    let time = getTimeFormat(date)
     this.setState({
-      getTime: time,
-      showDateTime: time
+      getTime: date,
+      showDateTime: date
     })
   };
-
-  getDayTime = () => {
-    let date = new Date().toISOString();
-    let getDateHour = getTimeFormat(date);
-    this.setState({
-      showDateTime: getDateHour
-    })
-  }
-
 
   loadItems(day) {
     setTimeout(() => {
@@ -186,14 +180,71 @@ export default class AgendaScreen extends Component {
     }, 1000);
   }
 
+  saveItens = () => {
+    const { description,
+      title,
+      buttonIndex,
+      getTime,
+      getDate,
+      getTimeTamp,
+      items } = this.state
+
+    let keyIndex = getDate
+    let copyItens = items
+
+    const data = {
+      name: title,
+      tasks: description,
+      dateTime: getTime,
+      timeTamp: getTimeTamp,
+      ...buttonIndex === 0 ? { dots: defaultMark } : null,
+      ...buttonIndex === 1 ? { dots: greenMark } : null,
+      ...buttonIndex === 2 ? { dots: redMark } : null,
+      ...buttonIndex === 3 ? { dots: yellowMark } : null,
+    }
+
+    if (!copyItens[keyIndex]) {
+      copyItens[keyIndex] = [data]
+    } else {
+      copyItens[keyIndex].push(data)
+    }
+
+    this.setState({
+      items: copyItens
+    })
+
+  }
+
+  deleteTask = async (item) => {
+
+    const { items } = this.state
+    let key = item
+    let copyItens = items
+
+    Reactotron.log(key)
+
+    copyItens[key].splice(item, 1)
+
+
+    await this.setState(prevState => ({
+      items: prevState.items = copyItens
+    }))
+  }
+
   renderItem(item) {
+
+    let swipeoutBtns = [
+      {
+        text: 'Button',
+        onPress: () => this.deleteTask(item.dateString),
+      }
+    ]
     return (
-      <TouchableNativeFeedback
-        background={
-          Platform.Version >= 21 ?
-            TouchableNativeFeedback.Ripple('rgba(0,0,0,.2)', false) :
-            TouchableNativeFeedback.SelectableBackground()
-        }>
+
+      <Swipeout
+        style={{ backgroundColor: '#fff' }}
+        autoClose={true}
+        right={swipeoutBtns}>
         <CardAgenda>
           <TextCard>{item.dateTime}</TextCard>
           <View style={{ flexDirection: 'row', marginTop: 5 }}>
@@ -208,7 +259,7 @@ export default class AgendaScreen extends Component {
             </View>
           </View>
         </CardAgenda>
-      </TouchableNativeFeedback>
+      </Swipeout>
     );
   }
 
@@ -224,15 +275,17 @@ export default class AgendaScreen extends Component {
 
   setModalVisible = (visible) => {
     this.setState({
-      modalVisible: visible
+      modalVisible: visible,
+      ...initialState
     });
   }
 
-  onDayPress = (day) => {
-    this.setState({
-      selected: day.dateString
+  onDayPress = async (day) => {
+    await this.setState({
+      selected: day.dateString,
+      getDate: day.dateString,
+      getTimeTamp: day.timestamp,
     });
-    Reactotron.log(this.state.getTime.getHours(), this.state.getTime)
   }
 
   getButton = (index) => {
@@ -256,18 +309,22 @@ export default class AgendaScreen extends Component {
     })
   }
 
+  exceptValues = (array, value) => {
+    return (array.indexOf(value) > -1);
+  }
+
 
   render() {
     return (
-
       <View style={styles.container}>
 
         <ModalComponent
-          press={() => this.setModalVisible(!this.state.modalVisible)}
+          close={() => this.setModalVisible(!this.state.modalVisible)}
+          save={() => this.saveItens()}
           modalVisible={this.state.modalVisible}
           calendar={
             <CalendarList
-              onDayPress={(day) => this.onDayPress(day)}
+              onDayPress={(day) => { this.onDayPress(day) }}
               horizontal={true}
               pagingEnabled={true}
               markedDates={{ [this.state.selected]: { selected: true, disableTouchEvent: true } }}
@@ -279,7 +336,8 @@ export default class AgendaScreen extends Component {
         >
           <View style={styles.viewHours}>
             <TouchableOpacity onPress={this._showDateTimePicker}>
-              <Text style={{ fontSize: 18 }}>{!is24Hour ? time24to12(this.state.showDateTime) : this.state.showDateTime}</Text>
+              <Text style={{ fontSize: 18 }}>{!is24Hour ?
+                time24to12(getTimeFormat(this.state.showDateTime)) : getTimeFormat(this.state.showDateTime)}</Text>
             </TouchableOpacity>
             <DateTimePicker
               mode={'time'}
