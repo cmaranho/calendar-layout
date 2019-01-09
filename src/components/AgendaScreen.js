@@ -71,7 +71,7 @@ const initialState = {
 
 
 const defaultMark = { key: 'defautMark', color: '#30c0f8' }
-const greenMark = { key: 'greenMark', color: '#38c328' };
+const greenMark = { key: 'greenMark', color: '#38c328' }
 const redMark = { key: 'redMark', color: '#ff4745' }
 const yellowMark = { key: 'yellowMark', color: '#fbab15' }
 
@@ -86,19 +86,41 @@ export default class AgendaScreen extends Component {
       modalVisible: false,
       isDateTimePickerVisible: false,
       items: {
-        '2019-01-01': [
+        '2019-01-09': [
           {
+
             name: 'Ir ao médico',
             tasks: 'Consulta marcada com o dr. Leandro',
             dateTime: '2019-01-06T08:47:00.000Z',
             timeTamp: 1546992000000,
-            dateString: '2019-01-01',
+            dateString: '2019-01-09',
             dots: { key: 'defautMark', color: '#30c0f8' }
+
+          },
+          {
+
+            name: 'Ir ao centro de São Paulo',
+            tasks: 'Comprar algumas coisas',
+            dateTime: '2019-01-06T18:47:00.000Z',
+            timeTamp: 1546992000000,
+            dateString: '2019-01-09',
+            dots: { key: 'greenMark', color: '#38c328' }
+
+          },
+          {
+
+            name: 'Viajar',
+            tasks: 'Viajar para Santos',
+            dateTime: '2019-01-06T22:47:00.000Z',
+            timeTamp: 1546992000000,
+            dateString: '2019-01-09',
+            dots: { key: 'yellowMark', color: '#fbab15' }
 
           }
         ],
         '2019-01-08': [
           {
+
             name: 'Dar carona',
             tasks: 'Passar no Roberto leva-lo ao centro de santo andré',
             dateTime: '2019-01-06T08:47:00.000Z',
@@ -111,6 +133,7 @@ export default class AgendaScreen extends Component {
         ],
         '2019-01-08': [
           {
+
             name: 'Viajar para a Praia',
             tasks: 'Viajar até Santos',
             dateTime: '2019-01-06T08:47:00.000Z',
@@ -121,6 +144,7 @@ export default class AgendaScreen extends Component {
         ],
         '2019-01-22': [
           {
+
             name: 'Ir para Santa Catarina',
             tasks: 'Viajar para Santa catarina',
             dateTime: '2019-01-06T08:47:00.000Z',
@@ -132,6 +156,7 @@ export default class AgendaScreen extends Component {
         ],
         '2019-01-24': [
           {
+
             name: 'Ir para Rio grande do Sul',
             tasks: 'Visitar a capítal do Rio grande do Sul',
             dateTime: '2019-01-06T08:47:00.000Z',
@@ -214,28 +239,23 @@ export default class AgendaScreen extends Component {
 
   }
 
-  deleteTask = async (item) => {
-
+  deleteTask = async (item, key) => {   
     const { items } = this.state
-    let key = item
     let copyItens = items
+    const ids = copyItens[key].map(time =>   !is24Hour ? time24to12(getTimeFormat(time.dateTime)) : getTimeFormat(time.dateTime))
+    let indexOF = ids.indexOf(item.dateTime)
 
-    Reactotron.log(key)
-
-    copyItens[key].splice(item, 1)
-
-
+    await copyItens[key].splice(indexOF, 1)
     await this.setState(prevState => ({
       items: prevState.items = copyItens
     }))
   }
 
   renderItem(item) {
-
     let swipeoutBtns = [
       {
         text: 'Button',
-        onPress: () => this.deleteTask(item.dateString),
+        onPress: () => this.deleteTask(item, item.dateString),
       }
     ]
     return (
