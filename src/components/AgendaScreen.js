@@ -239,10 +239,11 @@ export default class AgendaScreen extends Component {
 
   }
 
-  deleteTask = async (item, key) => {   
+  deleteTask = async (item, key) => {
     const { items } = this.state
     let copyItens = items
-    const ids = copyItens[key].map(time =>   !is24Hour ? time24to12(getTimeFormat(time.dateTime)) : getTimeFormat(time.dateTime))
+    const ids = copyItens[key].map(time =>
+      !is24Hour ? time24to12(getTimeFormat(time.dateTime)) : getTimeFormat(time.dateTime))
     let indexOF = ids.indexOf(item.dateTime)
 
     await copyItens[key].splice(indexOF, 1)
@@ -251,10 +252,12 @@ export default class AgendaScreen extends Component {
     }))
   }
 
-  renderItem(item) {
+  renderItem = (item) => {
     let swipeoutBtns = [
       {
-        text: 'Button',
+        text: 'Delete',
+        backgroundColor: '#ff4745',
+        color: '#ffffff',
         onPress: () => this.deleteTask(item, item.dateString),
       }
     ]
@@ -282,13 +285,13 @@ export default class AgendaScreen extends Component {
     );
   }
 
-  renderEmptyDate() {
+  renderEmptyDate = () => {
     return (
       <View style={styles.emptyDate}><Text>Nenhuma tarefa</Text></View>
     );
   }
 
-  rowHasChanged(r1, r2) {
+  rowHasChanged = (r1, r2) => {
     return r1.name !== r2.name;
   }
 
@@ -402,10 +405,9 @@ export default class AgendaScreen extends Component {
           items={filterItemByHour(this.state.items)}
           selected={new Date()}
           loadItemsForMonth={(day) => this.loadItems(day)}
-          renderItem={this.renderItem.bind(this)}
-          renderEmptyDate={this.renderEmptyDate.bind(this)}
-          rowHasChanged={this.rowHasChanged.bind(this)}
-          onDayPress={(day) => { Reactotron.log('selected day', day) }}
+          renderItem={(item) => this.renderItem(item)}
+          renderEmptyDate={() => this.renderEmptyDate()}
+          rowHasChanged={(r1, r2) => this.rowHasChanged(r1, r2)}
           markedDates={showTag(this.state.items)}
           markingType={'multi-dot'}
           theme={{ ...theme }}
