@@ -3,7 +3,7 @@ import { Text, View, Alert, Modal, StyleSheet } from 'react-native';
 
 
 import Header from './Header';
-import Button from './Button'
+import ButtonComponent from './ButtonComponent'
 import { ScrollView } from 'react-native-gesture-handler';
 
 
@@ -14,11 +14,12 @@ const ModalComponent = props => (
       transparent={false}
       visible={props.modalVisible}
       onRequestClose={() => {
-        Alert.alert('Modal has been closed.');
+        Alert.alert('Feche a janela para voltar.');
       }}>
       <View style={{ flex: 1 }}>
         <Header custom={{ justifyContent: 'flex-start', elevation: 2 }}>
-          <Button name={'close'} size={35} press={props.press} />
+          <ButtonComponent name={'close'} size={35} press={props.close} />
+          <ButtonComponent name={'check'} size={35} press={props.save} />
           <Text style={{ color: 'white' }}>Adicionar tarefas</Text>
         </Header>
         <ScrollView>

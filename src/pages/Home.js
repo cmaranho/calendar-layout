@@ -1,13 +1,13 @@
-import React, {Component} from 'react';
-import {Platform, StyleSheet, Dimensions, Text, View} from 'react-native';
+import React, { Component } from 'react';
+import { Platform, StyleSheet, Dimensions, Text, View } from 'react-native';
 
 //import components
 import AgendaScreen from '../components/AgendaScreen'
 
 export default class Home extends Component {
   render() {
-    return (      
-      <AgendaScreen/>
+    return (
+      <AgendaScreen />
     );
   }
 }

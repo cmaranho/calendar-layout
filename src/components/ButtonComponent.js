@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Platform, View, Text, Dimensions, TouchableNativeFeedback } from 'react-native';
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 
-const Button = props => {
+const ButtonComponent = props => {
 
     const { press, size } = props;
     const styleBtn = [styles.button]
@@ -44,4 +44,4 @@ const styles = StyleSheet.create({
 
 })
 
-export default Button;
+export default ButtonComponent;

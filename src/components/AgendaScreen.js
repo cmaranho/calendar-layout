@@ -4,7 +4,7 @@ import {
   View,
   StyleSheet,
   TouchableOpacity,
-  Dimensions
+  Dimensions,
 } from 'react-native';
 
 //Device info
@@ -25,7 +25,7 @@ import CardAgenda from './CardAgenda'
 import TagComponent from './TagComponent'
 import TextCard from './TextCard'
 import ModalComponent from './ModalComponent'
-import Button from './Button'
+import ButtonComponent from './ButtonComponent'
 import Input from './Input'
 
 import Swipeout from 'react-native-swipeout';
@@ -69,13 +69,10 @@ const initialState = {
   getTimeTamp: '',
 }
 
-
 const defaultMark = { key: 'defautMark', color: '#30c0f8' }
 const greenMark = { key: 'greenMark', color: '#38c328' }
 const redMark = { key: 'redMark', color: '#ff4745' }
 const yellowMark = { key: 'yellowMark', color: '#fbab15' }
-
-
 
 export default class AgendaScreen extends Component {
   constructor(props) {
@@ -396,8 +393,9 @@ export default class AgendaScreen extends Component {
         </ModalComponent>
 
         <Header>
-          <Button name={'menu'} size={35} />
-          <Button name={'plus'} size={35} press={() => {
+          <ButtonComponent name={'menu'} size={35}
+            press={() => navigation.navigate('MyModal')} />
+          <ButtonComponent name={'plus'} size={35} press={() => {
             this.setModalVisible(true);
           }} />
         </Header>
